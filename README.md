@@ -1,18 +1,12 @@
 # ORVIBO_Device_Control 协议修复版  v1.0.1
 基于 https://github.com/jzgods/ORVIBO_Device_Control
-ha装上后无法获取实体，借助WB修复，我只有s20c，测试没问题。
+我这在ha装上后无法获取实体，借助WB修复，只有s20c，测试后正常。
 
-欧瑞博云端改版：旧的 queryHomepageData 接口不再返回设备（返回 device:[]），
-TCP 10002 二进制通道也不再接受"账号手机号 + 密码MD5"直登（返回 status:545）。
-当前 App 改为 readtable 拉全量设备，并用其 account[] 下发的临时凭据登录二进制通道。
-
-【改了什么】
-  const.py        SOFTWARE_VER  5.1.4.302 -> 5.2.6.302
-  packet.py       get_homepage_data: queryHomepageData -> /v2/cmd/app/readtable 全量
-  packet.py       lastUpdateTime: 固定值 1761670123 -> 0
-  https_client.py 从 readtable 的 account[] 提取临时二进制通道凭据
-  coordinator.py  SSL 登录改用临时凭据
-  控制指令(cmd=15, order/value1)未变。
+# 安装方式 
+  1. 把本包里的 custom_components 目录整个复制到 HA 的 /config/ 下，或覆盖已有的 ORVIBO_Device_Control 目录下内容。
+  2. 重启 Home Assistant（必须重启，不能只重载集成）。
+  3. 添加集成，输入智家365 账号密码；已配置过的账号无需重配。
+  注意：domain 与原版完全相同，两个版本不能并存，必须覆盖。
 
 
 
