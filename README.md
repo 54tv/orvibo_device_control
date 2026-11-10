@@ -1,5 +1,23 @@
-# ORVIBO_Device_Control
+ORVIBO_Device_Control 协议修复版  v1.0.1
+基于 https://github.com/jzgods/ORVIBO_Device_Control，装上后无法获取实体，借助WB修复，我只有s20c，实体测试没问题。
 
+欧瑞博云端改版：旧的 queryHomepageData 接口不再返回设备（返回 device:[]），
+TCP 10002 二进制通道也不再接受"账号手机号 + 密码MD5"直登（返回 status:545）。
+当前 App 改为 readtable 拉全量设备，并用其 account[] 下发的临时凭据登录二进制通道。
+
+【改了什么】(5 处，均在 custom_components/ORVIBO_Device_Control/)
+  const.py        SOFTWARE_VER  5.1.4.302 -> 5.2.6.302
+  packet.py       get_homepage_data: queryHomepageData -> /v2/cmd/app/readtable 全量
+  packet.py       lastUpdateTime: 固定值 1761670123 -> 0
+  https_client.py 从 readtable 的 account[] 提取临时二进制通道凭据
+  coordinator.py  SSL 登录改用临时凭据
+控制指令(cmd=15, order/value1)未变，已在 S20c (deviceType 29/17) 实测通过。
+
+
+
+# 原版说明
+
+ORVIBO_Device_Control
 欧瑞博设备控制 Home Assistant 自定义组件
 前期连入智家365APP以及S20c、S30c的整套代码参考自：https://github.com/abb3421/orvibo_switch
 本组件在此项目基础上增加了MixSwitch系列开关、AirMaster Max控制器、多功能控制盒的适配
