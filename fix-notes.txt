@@ -1,0 +1,12 @@
+【为什么需要修】
+欧瑞博云端改版：旧的 queryHomepageData 接口不再返回设备（返回 device:[]），
+TCP 10002 二进制通道也不再接受"账号手机号 + 密码MD5"直登（返回 status:545）。
+当前 App 改为 readtable 拉全量设备，并用其 account[] 下发的临时凭据登录二进制通道。
+
+【改了什么】(5 处，均在 custom_components/ORVIBO_Device_Control/)
+  const.py        SOFTWARE_VER  5.1.4.302 -> 5.2.6.302
+  packet.py       get_homepage_data: queryHomepageData -> /v2/cmd/app/readtable 全量
+  packet.py       lastUpdateTime: 固定值 1761670123 -> 0
+  https_client.py 从 readtable 的 account[] 提取临时二进制通道凭据
+  coordinator.py  SSL 登录改用临时凭据
+控制指令(cmd=15, order/value1)未变，已在 S20c (deviceType 29/17) 实测通过。
